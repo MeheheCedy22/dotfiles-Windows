@@ -1,4 +1,4 @@
-Write-Host "------------ NEW POWERSHELL v7.x ------------"
+# Write-Host "------------ NEW POWERSHELL v7.x ------------"
 
 # enable command history
 Set-PSReadLineOption -PredictionSource History
@@ -31,6 +31,8 @@ $parent = Get-CimInstance Win32_Process -Filter "ProcessId = $((Get-CimInstance 
 if ($parent.Name -eq "alacritty.exe" -and $parent.CommandLine -notlike "*--working-dir*") {
     Set-Location "C:\Marek"
 }
+
+# Clear-Host
 
 function cheat {
     param (

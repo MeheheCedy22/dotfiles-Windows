@@ -21,10 +21,6 @@ Set-Alias bb bat
 $ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
 Invoke-Expression (&"C:\Program Files\starship\bin\starship.exe" init powershell)
 
-if ((Get-CimInstance Win32_Process | Where-Object { $_.Name -eq "alacritty.exe" }).Count -eq 1 -and (Get-CimInstance Win32_Process | Where-Object {$_.Name -eq "alacritty.exe" -and $_.CommandLine -like "*--working-dir*"})) {
-    Set-Location "C:\Marek"
-}
-
 # Get the parent (Alacritty) process of the current PowerShell process
 $parent = Get-CimInstance Win32_Process -Filter "ProcessId = $((Get-CimInstance Win32_Process -Filter "ProcessId = $PID").ParentProcessId)"
 

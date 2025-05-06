@@ -57,6 +57,8 @@ disabled = false
 [shell]
 disabled = false
 unknown_indicator = 'unknown shell'
+powershell_indicator = 'psh'
+pwsh_indicator = 'pwsh'
 
 [cmake]
 symbol = '🛠️ '

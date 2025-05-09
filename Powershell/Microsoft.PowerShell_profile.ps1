@@ -18,6 +18,8 @@ Set-Alias -Name "tail" -Value "C:\Program Files\Git\usr\bin\tail.exe"
 Set-Alias -Name "head" -Value "C:\Program Files\Git\usr\bin\head.exe"
 Set-Alias -Name "vim" -Value "C:\Program Files\Git\usr\bin\vim.exe"
 Set-Alias -Name "touch" -Value "C:\Program Files\Git\usr\bin\touch.exe"
+Set-Alias -Name "which" -Value "C:\Program Files\Git\usr\bin\which.exe"
+Set-Alias -Name "wc" -Value "C:\Program Files\Git\usr\bin\wc.exe"
 
 Set-Alias bb bat
 

@@ -1,13 +1,13 @@
 # Write-Host "------------ NEW POWERSHELL v7.x ------------"
 
 # enable command history
-Set-PSReadLineOption -PredictionSource History
+# Set-PSReadLineOption -PredictionSource History
 
 # do not save wrong commands (when hit 'Enter' error pops up but from PSReadLine not the powershell itself)
-Set-PSReadLineKeyHandler -Chord Enter -Function ValidateAndAcceptLine
+# Set-PSReadLineKeyHandler -Chord Enter -Function ValidateAndAcceptLine
 
 # change to ListView instead of inline suggestion
-Set-PSReadLineOption -PredictionViewStyle ListView
+# Set-PSReadLineOption -PredictionViewStyle ListView
 
 # for this to work need to install module (just once): Install-Module PSCompletions -Scope CurrentUser
 # Import-Module PSCompletions
@@ -25,16 +25,6 @@ Set-Alias bb bat
 
 $ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
 Invoke-Expression (&"C:\Program Files\starship\bin\starship.exe" init powershell)
-
-# Get the parent (Alacritty) process of the current PowerShell process
-$parent = Get-CimInstance Win32_Process -Filter "ProcessId = $((Get-CimInstance Win32_Process -Filter "ProcessId = $PID").ParentProcessId)"
-
-# If it's Alacritty and doesn't have the --working-dir argument
-if ($parent.Name -eq "alacritty.exe" -and $parent.CommandLine -notlike "*--working-dir*") {
-    Set-Location "C:\Marek"
-}
-
-# Clear-Host
 
 function cheat {
     param (

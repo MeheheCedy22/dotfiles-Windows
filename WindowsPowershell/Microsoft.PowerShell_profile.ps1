@@ -18,21 +18,10 @@ Set-Alias -Name "touch" -Value "C:\Program Files\Git\usr\bin\touch.exe"
 Set-Alias -Name "which" -Value "C:\Program Files\Git\usr\bin\which.exe"
 Set-Alias -Name "wc" -Value "C:\Program Files\Git\usr\bin\wc.exe"
 
-
 Set-Alias bb bat
 
 $ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
 Invoke-Expression (&"C:\Program Files\starship\bin\starship.exe" init powershell)
-
-# Get the parent (Alacritty) process of the current PowerShell process
-$parent = Get-CimInstance Win32_Process -Filter "ProcessId = $((Get-CimInstance Win32_Process -Filter "ProcessId = $PID").ParentProcessId)"
-
-# If it's Alacritty and doesn't have the --working-dir argument
-if ($parent.Name -eq "alacritty.exe" -and $parent.CommandLine -notlike "*--working-dir*") {
-    Set-Location "C:\Marek"
-}
-
-# Clear-Host
 
 function cheat {
     param (
@@ -99,6 +88,7 @@ function ff {
         }
     }
 }
+
 # Import the Chocolatey Profile that contains the necessary code to enable
 # tab-completions to function for `choco`.
 # Be aware that if you are missing these lines from your profile, tab completion

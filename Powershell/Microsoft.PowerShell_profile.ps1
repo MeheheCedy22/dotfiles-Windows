@@ -36,6 +36,30 @@ function cheat {
     }
 }
 
+function qr {
+    param (
+        [Parameter(ValueFromPipeline = $true)]
+        [string]$inputString,
+        [switch]$isURL
+    )
+    Process {
+        if ([string]::IsNullOrWhiteSpace($inputString))
+        {
+            # Write-Error "No argument provided."
+            return
+        }
+
+        if ($isURL)
+        {
+            if ($inputString -notmatch '^https?://') {
+                $inputString = "https://$inputString"
+            }
+        }
+        
+        C:\Windows\System32\curl.exe https://qrenco.de/$inputString
+    }
+}
+
 function lss {
     param (
         [Parameter(ValueFromPipeline=$true)]

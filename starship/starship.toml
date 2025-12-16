@@ -12,23 +12,37 @@ ssh_symbol = '🌐 '
 format = '[$hostname](bold yellow) '
 disabled = false
 
-# Replace the "❯" symbol in the prompt with "➜"
-# Replace the "✗" symbol in the prompt with ""
-[character]
-success_symbol = "[❯](bold cyan)"
-error_symbol = "[✗](bold red)"
-
 [directory]
 read_only = " 󰌾"
-truncation_length = 10
+truncation_length = 5
 truncate_to_repo = true
 truncation_symbol = "...\\"
 style = "bold italic blue"
 home_symbol = "C:\\Users\\marek"
 
+[shell]
+disabled = false
+format = '[$indicator]($style)' # removed space from default
+unknown_indicator = 'unknown shell'
+powershell_indicator = 'psh'
+pwsh_indicator = 'pwsh'
+
+# Replace the "❯" symbol in the prompt with "➜"
+# Replace the "✗" symbol in the prompt with ""
+[character]
+# format = '$symbol' # removed space from default
+success_symbol = "[❯](bold cyan)"
+error_symbol = "[✗](bold red)"
+
+[memory_usage]
+symbol = '🐏 '
+threshold = 85 # default: 75
+format = '$symbol[${ram_pct}|${swap_pct}]($style) '
+disabled = false
+
 [cmd_duration]
 # min_time = 1 # in [ms], default: 2_000
-show_milliseconds = true
+# show_milliseconds = true
 disabled = false
 style = "bold italic red"
 
@@ -36,6 +50,9 @@ style = "bold italic red"
 symbol = '🧙 '
 style = 'bold blue'
 disabled = false
+
+# [time]
+# disabled = false
 
 [c]
 disabled = false
@@ -48,24 +65,11 @@ disabled = false
 symbol = '🐍 '
 disabled = false
 
-[memory_usage]
-symbol = '🐏 '
-threshold = 85 # default: 75
-format = '$symbol[${ram_pct}|${swap_pct}]($style) '
-disabled = false
-
-[shell]
-disabled = false
-unknown_indicator = 'unknown shell'
-powershell_indicator = 'psh'
-pwsh_indicator = 'pwsh'
-
 [cmake]
 symbol = '🛠️ '
 disabled = false
 
-# [time]
-# disabled = false
+# ----------
 
 [aws]
 symbol = "  "

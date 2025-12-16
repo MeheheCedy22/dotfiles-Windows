@@ -2,14 +2,14 @@
 style_user = "green bold"
 style_root = "red bold"
 # format = "[$user]($style) 🌚 "
-format = "[$user]($style) "
+format = "[$user]($style)[@](purple bold)"
 disabled = false
 show_always = true
 
 [hostname]
 ssh_only = false
 ssh_symbol = '🌐 '
-format = 'on [$hostname](bold yellow) '
+format = '[$hostname](bold yellow) '
 disabled = false
 
 # Replace the "❯" symbol in the prompt with "➜"
@@ -27,8 +27,8 @@ style = "bold italic blue"
 home_symbol = "C:\\Users\\marek"
 
 [cmd_duration]
-min_time = 4
-show_milliseconds = false
+# min_time = 1 # in [ms], default: 2_000
+show_milliseconds = true
 disabled = false
 style = "bold italic red"
 
@@ -50,8 +50,8 @@ disabled = false
 
 [memory_usage]
 symbol = '🐏 '
-threshold = -1
-format = '$symbol[${ram_pct}( | ${swap_pct})]($style) '
+threshold = 85 # default: 75
+format = '$symbol[${ram_pct}|${swap_pct}]($style) '
 disabled = false
 
 [shell]

@@ -17,6 +17,7 @@ Set-Alias -Name "vim" -Value "C:\Program Files\Git\usr\bin\vim.exe"
 Set-Alias -Name "touch" -Value "C:\Program Files\Git\usr\bin\touch.exe"
 Set-Alias -Name "which" -Value "C:\Program Files\Git\usr\bin\which.exe"
 Set-Alias -Name "wc" -Value "C:\Program Files\Git\usr\bin\wc.exe"
+Set-Alias -Name "find_linux" -Value "C:\Program Files\Git\usr\bin\find.exe"
 
 Set-Alias bb bat
 

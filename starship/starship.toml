@@ -1,3 +1,6 @@
+[os]
+disabled = false
+
 [username]
 style_user = "green bold"
 style_root = "red bold"

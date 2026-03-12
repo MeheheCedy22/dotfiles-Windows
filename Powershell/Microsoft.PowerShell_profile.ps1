@@ -12,17 +12,17 @@
 # for this to work need to install module (just once): Install-Module PSCompletions -Scope CurrentUser
 # Import-Module PSCompletions
 
-Set-Alias -Name "less" -Value "C:\Program Files\Git\usr\bin\less.exe"
-Set-Alias -Name "grep" -Value "C:\Program Files\Git\usr\bin\grep.exe"
-Set-Alias -Name "tail" -Value "C:\Program Files\Git\usr\bin\tail.exe"
-Set-Alias -Name "head" -Value "C:\Program Files\Git\usr\bin\head.exe"
-Set-Alias -Name "vim" -Value "C:\Program Files\Git\usr\bin\vim.exe"
-Set-Alias -Name "touch" -Value "C:\Program Files\Git\usr\bin\touch.exe"
-Set-Alias -Name "which" -Value "C:\Program Files\Git\usr\bin\which.exe"
-Set-Alias -Name "wc" -Value "C:\Program Files\Git\usr\bin\wc.exe"
+# Set-Alias -Name "less" -Value "C:\Program Files\Git\usr\bin\less.exe"
+# Set-Alias -Name "grep" -Value "C:\Program Files\Git\usr\bin\grep.exe"
+# Set-Alias -Name "tail" -Value "C:\Program Files\Git\usr\bin\tail.exe"
+# Set-Alias -Name "head" -Value "C:\Program Files\Git\usr\bin\head.exe"
+# Set-Alias -Name "vim" -Value "C:\Program Files\Git\usr\bin\vim.exe"
+# Set-Alias -Name "touch" -Value "C:\Program Files\Git\usr\bin\touch.exe"
+# Set-Alias -Name "wc" -Value "C:\Program Files\Git\usr\bin\wc.exe"
+# Set-Alias -Name "uniq_linux" -Value "C:\Program Files\Git\usr\bin\uniq.exe"
 Set-Alias -Name "find_linux" -Value "C:\Program Files\Git\usr\bin\find.exe"
-Set-Alias -Name "uniq_linux" -Value "C:\Program Files\Git\usr\bin\uniq.exe"
 Set-Alias -Name "sort_linux" -Value "C:\Program Files\Git\usr\bin\sort.exe"
+Set-Alias -Name "which_linux" -Value "C:\Program Files\Git\usr\bin\which.exe"
 
 Set-Alias bb bat
 
@@ -184,3 +184,7 @@ function Set-FzfHistoryKeybind {
 
 Set-FzfHistoryKeybind -Chord Ctrl+r
 # --------------------------------------------------------------
+function which ($command) {
+  Get-Command -Name $command -ErrorAction SilentlyContinue |
+    Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
+}

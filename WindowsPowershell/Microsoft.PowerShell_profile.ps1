@@ -72,11 +72,11 @@ function lss {
 
         if ($params.Count -gt 0)
         {
-            & "C:\Users\marek\AppData\Local\Microsoft\WinGet\Links\eza.exe" -alh --group-directories-first --icons=auto --absolute=on $finalParams
+            & "C:\Users\marek\AppData\Local\Microsoft\WinGet\Links\eza.exe" -alh --smart-group --color=auto --group-directories-first --icons=auto --absolute=on $finalParams
         }
         else
         {
-            & "C:\Users\marek\AppData\Local\Microsoft\WinGet\Links\eza.exe" -alh --group-directories-first --icons=auto $finalParams
+            & "C:\Users\marek\AppData\Local\Microsoft\WinGet\Links\eza.exe" -alh --smart-group --color=auto --group-directories-first --icons=auto $finalParams
         }
     }
 }

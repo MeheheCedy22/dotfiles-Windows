@@ -29,6 +29,8 @@ Set-Alias bb bat
 $ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
 Invoke-Expression (&"C:\Program Files\starship\bin\starship.exe" init powershell)
 
+tailscale completion powershell | Out-String | Invoke-Expression
+
 function cheat {
     param (
         [Parameter(ValueFromPipeline = $true)]

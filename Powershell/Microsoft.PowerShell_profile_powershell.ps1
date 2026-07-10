@@ -1,16 +1,13 @@
-# Write-Host "------------ NEW POWERSHELL v7.x ------------"
+# Write-Host "------------ OLD WINDOWS POWERSHELL (< v5.x) ------------"
 
 # enable command history
-# Set-PSReadLineOption -PredictionSource History
+Set-PSReadLineOption -PredictionSource History
 
 # do not save wrong commands (when hit 'Enter' error pops up but from PSReadLine not the powershell itself)
-# Set-PSReadLineKeyHandler -Chord Enter -Function ValidateAndAcceptLine
+Set-PSReadLineKeyHandler -Chord Enter -Function ValidateAndAcceptLine
 
 # change to ListView instead of inline suggestion
-# Set-PSReadLineOption -PredictionViewStyle ListView
-
-# for this to work need to install module (just once): Install-Module PSCompletions -Scope CurrentUser
-# Import-Module PSCompletions
+Set-PSReadLineOption -PredictionViewStyle ListView
 
 # Set-Alias -Name "less" -Value "C:\Program Files\Git\usr\bin\less.exe"
 # Set-Alias -Name "grep" -Value "C:\Program Files\Git\usr\bin\grep.exe"
@@ -50,7 +47,7 @@ function qr {
     Process {
         if ([string]::IsNullOrWhiteSpace($inputString))
         {
-            # Write-Error "No argument provided."
+            Write-Error "No argument provided."
             return
         }
 
@@ -93,7 +90,6 @@ function ff {
     )
 
     process {
-        # ne -> not equal
         # if there is some piped input, than use it as piped input (cant have params / do not need params)
         if ($_ -ne $NULL)
         {
@@ -121,6 +117,15 @@ function ff {
     }
 }
 
+# Import the Chocolatey Profile that contains the necessary code to enable
+# tab-completions to function for `choco`.
+# Be aware that if you are missing these lines from your profile, tab completion
+# for `choco` will not function.
+# See https://ch0.co/tab-completion for details.
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Test-Path($ChocolateyProfile)) {
+  Import-Module "$ChocolateyProfile"
+}
 
 # --------------------------------------------------------------
 # Copyright (C) 2024 Kenichi Kamiya

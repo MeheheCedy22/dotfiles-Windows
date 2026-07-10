@@ -1,33 +1,48 @@
-# Write-Host "------------ OLD WINDOWS POWERSHELL (< v5.x) ------------"
+# --------------------------------------------------------------
+# 1. Cache Setup & Initialization
+# --------------------------------------------------------------
+$CacheDir = "$HOME\.mypwsh\cache"
 
-# enable command history
-Set-PSReadLineOption -PredictionSource History
+# Ensure cache directory exists
+if (-not (Test-Path -Path $CacheDir)) {
+    New-Item -ItemType Directory -Path $CacheDir | Out-Null
+}
 
-# do not save wrong commands (when hit 'Enter' error pops up but from PSReadLine not the powershell itself)
-Set-PSReadLineKeyHandler -Chord Enter -Function ValidateAndAcceptLine
+# --- Starship Initialization ---
+$ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
+$StarshipCache = Join-Path $CacheDir "starship_init.ps1"
 
-# change to ListView instead of inline suggestion
-Set-PSReadLineOption -PredictionViewStyle ListView
+if (-not (Test-Path -Path $StarshipCache)) {
+    # Generate and save to cache
+    & 'C:\Program Files\starship\bin\starship.exe' init powershell --print-full-init | Out-File -FilePath $StarshipCache -Encoding utf8
+}
+# Load from cache
+. $StarshipCache
 
-# Set-Alias -Name "less" -Value "C:\Program Files\Git\usr\bin\less.exe"
-# Set-Alias -Name "grep" -Value "C:\Program Files\Git\usr\bin\grep.exe"
-# Set-Alias -Name "tail" -Value "C:\Program Files\Git\usr\bin\tail.exe"
-# Set-Alias -Name "head" -Value "C:\Program Files\Git\usr\bin\head.exe"
-# Set-Alias -Name "vim" -Value "C:\Program Files\Git\usr\bin\vim.exe"
-# Set-Alias -Name "touch" -Value "C:\Program Files\Git\usr\bin\touch.exe"
-# Set-Alias -Name "wc" -Value "C:\Program Files\Git\usr\bin\wc.exe"
-# Set-Alias -Name "uniq_linux" -Value "C:\Program Files\Git\usr\bin\uniq.exe"
+
+# --- Tailscale Initialization ---
+$TailscaleCache = Join-Path $CacheDir "tailscale_completion.ps1"
+
+if (-not (Test-Path -Path $TailscaleCache)) {
+    # Generate and save to cache
+    tailscale completion powershell | Out-File -FilePath $TailscaleCache -Encoding utf8
+}
+# Load from cache
+. $TailscaleCache
+
+# --------------------------------------------------------------
+# 2. Aliases
+# --------------------------------------------------------------
+# Not needed for less, grep, tail, head, vim, touch, wc, which, uniq because they are in path and do not have Windows counterparts.
+
 Set-Alias -Name "find_linux" -Value "C:\Program Files\Git\usr\bin\find.exe"
 Set-Alias -Name "sort_linux" -Value "C:\Program Files\Git\usr\bin\sort.exe"
-Set-Alias -Name "which_linux" -Value "C:\Program Files\Git\usr\bin\which.exe"
 
 Set-Alias bb bat
 
-$ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
-Invoke-Expression (&"C:\Program Files\starship\bin\starship.exe" init powershell)
-
-tailscale completion powershell | Out-String | Invoke-Expression
-
+# --------------------------------------------------------------
+# 3. Custom Functions
+# --------------------------------------------------------------
 function cheat {
     param (
         [Parameter(ValueFromPipeline = $true)]
@@ -47,7 +62,6 @@ function qr {
     Process {
         if ([string]::IsNullOrWhiteSpace($inputString))
         {
-            # Write-Error "No argument provided."
             return
         }
 
@@ -102,8 +116,6 @@ function ff {
     }
 
     end {
-        # remove color escape chars
-        # $inputData = $inputData -replace '\x1b\[[0-9;]*[mK]', ''
         # remove last endline
         $inputData = $inputData -replace "(\r?\n)$", ""
 
@@ -118,25 +130,12 @@ function ff {
     }
 }
 
-# Import the Chocolatey Profile that contains the necessary code to enable
-# tab-completions to function for `choco`.
-# Be aware that if you are missing these lines from your profile, tab completion
-# for `choco` will not function.
-# See https://ch0.co/tab-completion for details.
-$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-if (Test-Path($ChocolateyProfile)) {
-  Import-Module "$ChocolateyProfile"
-}
-
 # --------------------------------------------------------------
-# Copyright (C) 2024 Kenichi Kamiya
-
-# Do not add --height option for fzf, it shows nothing in keybind use
+# 4. FZF History (Copyright (C) 2024 Kenichi Kamiya)
+# --------------------------------------------------------------
 function Invoke-FzfHistory ([String]$fuzzy) {
     $history = [Microsoft.PowerShell.PSConsoleReadLine]::GetHistoryItems()
     $uniqueCommands = Get-UniqueReverseHistory $history
-    # Join with NUL character to support multiline items in fzf
-    # $matched = $uniqueCommands -join "`0" | fzf --read0 --no-sort --no-height --scheme=history --query=$fuzzy
     $matched = $uniqueCommands -join "`0" | fzf --read0 --layout reverse  --border --scheme=history --query=$fuzzy
     
     # fzf output is captured as a string array if it contains newlines.
@@ -182,8 +181,3 @@ function Set-FzfHistoryKeybind {
 }
 
 Set-FzfHistoryKeybind -Chord Ctrl+r
-# --------------------------------------------------------------
-function which ($command) {
-  Get-Command -Name $command -ErrorAction SilentlyContinue |
-    Select-Object -ExpandProperty Path -ErrorAction SilentlyContinue
-}

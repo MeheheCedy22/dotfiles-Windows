@@ -2,17 +2,8 @@
 # 1. Cache Setup & Initialization
 # --------------------------------------------------------------
 
-if ($PSVersionTable.PSEdition -eq 'Core') {
-    # ---------------------------------------------
-    # Runs in PowerShell 6, PowerShell 7 (pwsh)
-    # ---------------------------------------------
-    # Write-Host "Running modern PowerShell (Core)" -ForegroundColor Cyan
-} 
-else {
-    # ---------------------------------------------
+if ($PSVersionTable.PSEdition -ne 'Core') {
     # Runs in Windows PowerShell 5.1 and older
-    # ---------------------------------------------
-    # Write-Host "Running legacy Windows PowerShell" -ForegroundColor Yellow
 
     # enable command history
     Set-PSReadLineOption -PredictionSource History
@@ -22,10 +13,8 @@ else {
     Set-PSReadLineOption -PredictionViewStyle ListView
 }
 
-
 $CacheDir = "$HOME\.mypwsh\cache"
 
-# Ensure cache directory exists
 if (-not (Test-Path -Path $CacheDir)) {
     New-Item -ItemType Directory -Path $CacheDir | Out-Null
 }
@@ -35,10 +24,8 @@ $ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
 $StarshipCache = Join-Path $CacheDir "starship_init.ps1"
 
 if (-not (Test-Path -Path $StarshipCache)) {
-    # Generate and save to cache
     & 'C:\Program Files\starship\bin\starship.exe' init powershell --print-full-init | Out-File -FilePath $StarshipCache -Encoding utf8
 }
-# Load from cache
 . $StarshipCache
 
 
@@ -46,10 +33,8 @@ if (-not (Test-Path -Path $StarshipCache)) {
 $TailscaleCache = Join-Path $CacheDir "tailscale_completion.ps1"
 
 if (-not (Test-Path -Path $TailscaleCache)) {
-    # Generate and save to cache
     tailscale completion powershell | Out-File -FilePath $TailscaleCache -Encoding utf8
 }
-# Load from cache
 . $TailscaleCache
 
 # --------------------------------------------------------------
@@ -126,8 +111,7 @@ function ff {
     )
 
     process {
-        # ne -> not equal
-        # if there is some piped input, than use it as piped input (cant have params / do not need params)
+        # if there is some piped input, than use it as piped input (can't have params / do not need params)
         if ($_ -ne $NULL)
         {
             foreach ($var in $_)
@@ -146,7 +130,7 @@ function ff {
             $inputData | & "C:\Users\marek\AppData\Local\Microsoft\WinGet\Links\fzf.exe" --height 75% --layout reverse --multi --border --preview 'bat --color=always {}'
         } 
         else {
-            # else -> there is no piped input, can use additional params
+            # there is no piped input, can use additional params
             & "C:\Users\marek\AppData\Local\Microsoft\WinGet\Links\fzf.exe" --height 75% --layout reverse --multi --border --preview 'bat --color=always {}' $params
         }
     }

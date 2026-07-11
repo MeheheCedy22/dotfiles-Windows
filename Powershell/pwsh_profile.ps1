@@ -1,6 +1,28 @@
 # --------------------------------------------------------------
 # 1. Cache Setup & Initialization
 # --------------------------------------------------------------
+
+if ($PSVersionTable.PSEdition -eq 'Core') {
+    # ---------------------------------------------
+    # Runs in PowerShell 6, PowerShell 7 (pwsh)
+    # ---------------------------------------------
+    # Write-Host "Running modern PowerShell (Core)" -ForegroundColor Cyan
+} 
+else {
+    # ---------------------------------------------
+    # Runs in Windows PowerShell 5.1 and older
+    # ---------------------------------------------
+    # Write-Host "Running legacy Windows PowerShell" -ForegroundColor Yellow
+
+    # enable command history
+    Set-PSReadLineOption -PredictionSource History
+    # do not save wrong commands (when hit 'Enter' error pops up but from PSReadLine not the powershell itself)
+    Set-PSReadLineKeyHandler -Chord Enter -Function ValidateAndAcceptLine
+    # change to ListView instead of inline suggestion
+    Set-PSReadLineOption -PredictionViewStyle ListView
+}
+
+
 $CacheDir = "$HOME\.mypwsh\cache"
 
 # Ensure cache directory exists

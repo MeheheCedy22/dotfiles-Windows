@@ -27,6 +27,8 @@
 ```ps1
 # setup powershell and windows powershell profile to load custom scripts and configs
 echo '. "$HOME\.mypwsh\pwsh_profile.ps1"' > $HOME\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
+echo '. "$HOME\.mypwsh\pwsh_profile.ps1"' > $HOME\Documents\PowerShell\Microsoft.VSCode_profile.ps1
+echo '. "$HOME\.mypwsh\pwsh_profile.ps1"' > $HOME\Documents\WindowsPowerShell\Microsoft.VSCode_profile.ps1
 echo '. "$HOME\.mypwsh\pwsh_profile.ps1"' > $HOME\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
 # create custom profile dir
 mkdir $HOME\.mypwsh\

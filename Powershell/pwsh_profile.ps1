@@ -95,11 +95,11 @@ function lss {
 
         if ($params.Count -gt 0)
         {
-            & "C:\Users\marek\AppData\Local\Microsoft\WinGet\Links\eza.exe" -alh --smart-group --color=auto --group-directories-first --icons=auto --absolute=on $finalParams
+            & "$env:LOCALAPPDATA\Microsoft\WinGet\Links\eza.exe" -alh --smart-group --color=auto --group-directories-first --icons=auto --absolute=on $finalParams
         }
         else
         {
-            & "C:\Users\marek\AppData\Local\Microsoft\WinGet\Links\eza.exe" -alh --smart-group --color=auto --group-directories-first --icons=auto $finalParams
+            & "$env:LOCALAPPDATA\Microsoft\WinGet\Links\eza.exe" -alh --smart-group --color=auto --group-directories-first --icons=auto $finalParams
         }
     }
 }
@@ -127,11 +127,11 @@ function ff {
 
         if ($_ -ne $NULL)
         {
-            $inputData | & "C:\Users\marek\AppData\Local\Microsoft\WinGet\Links\fzf.exe" --height 75% --layout reverse --multi --border --preview 'bat --color=always {}'
+            $inputData | & "$env:LOCALAPPDATA\Microsoft\WinGet\Links\fzf.exe" --height 75% --layout reverse --multi --border --preview 'bat --color=always {}'
         } 
         else {
             # there is no piped input, can use additional params
-            & "C:\Users\marek\AppData\Local\Microsoft\WinGet\Links\fzf.exe" --height 75% --layout reverse --multi --border --preview 'bat --color=always {}' $params
+            & "$env:LOCALAPPDATA\Microsoft\WinGet\Links\fzf.exe" --height 75% --layout reverse --multi --border --preview 'bat --color=always {}' $params
         }
     }
 }

@@ -16,17 +16,19 @@ $ProfilePaths = @(
 foreach ($ProfilePath in $ProfilePaths) {
     Write-Host "Setting up profile: $ProfilePath" -ForegroundColor Cyan
     # Backup existing profile if it exists
-    Copy-Item -Path $ProfilePath -Destination "$ProfilePath.bak"
     if (Test-Path -Path $ProfilePath) {
+        Copy-Item -Path $ProfilePath -Destination "$ProfilePath.bak"
         Write-Host "Backing up existing profile to $ProfilePath.bak" -ForegroundColor Yellow
+        Clear-Content -Path $ProfilePath
+        Write-Host "Clearing existing profile: $ProfilePath" -ForegroundColor Yellow
     }
     else {
         Write-Host "No existing profile found. Creating new profile." -ForegroundColor Green
         New-Item -ItemType File -Path $ProfilePath -Force | Out-Null
         Write-Host "New profile created: $ProfilePath" -ForegroundColor Green
-        Write-Host "Adding custom profile path to $ProfilePath" -ForegroundColor Green
-        Add-Content -Append -Value ". `"$CustomProfilePath`"" -Path $ProfilePath
     }
+    Write-Host "Adding custom profile path to $ProfilePath" -ForegroundColor Green
+    Add-Content -Value ". `"$CustomProfilePath`"" -Path $ProfilePath
 }
 
 # create custom profile dir

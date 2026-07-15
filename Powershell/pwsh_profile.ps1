@@ -1,4 +1,16 @@
 # --------------------------------------------------------------
+# 0. Variables
+# --------------------------------------------------------------
+
+$CacheDir = "$HOME\.mypwsh\cache"
+
+$gitBashDir = "C:\Program Files\Git\usr\bin"
+# exe paths
+$StarshipExe = "C:\Program Files\starship\bin\starship.exe"
+$TailscaleExe = "C:\Program Files\Tailscale\tailscale.exe"
+
+
+# --------------------------------------------------------------
 # 1. Cache Setup & Initialization
 # --------------------------------------------------------------
 
@@ -13,29 +25,27 @@ if ($PSVersionTable.PSEdition -ne 'Core') {
     Set-PSReadLineOption -PredictionViewStyle ListView
 }
 
-$CacheDir = "$HOME\.mypwsh\cache"
-
 if (-not (Test-Path -Path $CacheDir)) {
     New-Item -ItemType Directory -Path $CacheDir | Out-Null
 }
 
 # --- Starship Initialization ---
-if (Get-Command 'C:\Program Files\starship\bin\starship.exe' -ErrorAction SilentlyContinue) {
+if (Get-Command $StarshipExe -ErrorAction SilentlyContinue) {
     $ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
     $StarshipCache = Join-Path $CacheDir "starship_init.ps1"
 
     if (-not (Test-Path -Path $StarshipCache)) {
-        & 'C:\Program Files\starship\bin\starship.exe' init powershell --print-full-init | Out-File -FilePath $StarshipCache -Encoding utf8
+        & $StarshipExe init powershell --print-full-init | Out-File -FilePath $StarshipCache -Encoding utf8
     }
     . $StarshipCache
 }
 
 # --- Tailscale Initialization ---
-if (Get-Command 'C:\Program Files\Tailscale\tailscale.exe' -ErrorAction SilentlyContinue) {
+if (Get-Command $TailscaleExe -ErrorAction SilentlyContinue) {
     $TailscaleCache = Join-Path $CacheDir "tailscale_completion.ps1"
 
     if (-not (Test-Path -Path $TailscaleCache)) {
-        & 'C:\Program Files\Tailscale\tailscale.exe' completion powershell | Out-File -FilePath $TailscaleCache -Encoding utf8
+        & $TailscaleExe completion powershell | Out-File -FilePath $TailscaleCache -Encoding utf8
     }
     . $TailscaleCache
 }
@@ -44,10 +54,9 @@ if (Get-Command 'C:\Program Files\Tailscale\tailscale.exe' -ErrorAction Silently
 # 2. Aliases
 # --------------------------------------------------------------
 # Not needed for less, grep, tail, head, vim, touch, wc, which, uniq because they are in path and do not have Windows counterparts.
-$gitPath = "C:\Program Files\Git\usr\bin"
-if (Test-Path -Path $gitPath) {
-    Set-Alias -Name "find_linux" -Value "$gitPath\find.exe"
-    Set-Alias -Name "sort_linux" -Value "$gitPath\sort.exe"
+if (Test-Path -Path $gitBashDir) {
+    Set-Alias -Name "find_linux" -Value "$gitBashDir\find.exe"
+    Set-Alias -Name "sort_linux" -Value "$gitBashDir\sort.exe"
 }
 Set-Alias bb bat
 

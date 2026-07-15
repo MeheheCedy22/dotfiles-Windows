@@ -34,19 +34,19 @@ git clone https://github.com/MeheheCedy22/dotfiles-Windows.git
 
 **Complete**
 
-- to setup PowerShell and Windows PowerShell profiles run the [Powershell\setup.ps1](./Powershell/setup.ps1) script in PowerShell:
+- to setup PowerShell and Windows PowerShell profiles run the [setup.ps1](./Powershell/setup.ps1) script in PowerShell:
 ```ps1
 . $env:USERPROFILE\dotfiles-Windows\Powershell\setup.ps1
 ```
 
 **Partial**
 
-- to add custom paths to the PATH environment variable, run [Powershell\add_paths.ps1](./Powershell/add_paths.ps1) script in PowerShell:
-- paths can be modified in the [Powershell\path_list.ps1](./Powershell/path_list.ps1) file
+- to add custom paths to the PATH environment variable, run [add_paths.ps1](./Powershell/add_paths.ps1) script in PowerShell:
+- paths can be modified in the [path_list.ps1](./Powershell/path_list.ps1) file
 ```ps1
 . $env:USERPROFILE\dotfiles-Windows\Powershell\add_paths.ps1
 ```
-- to setup PowerShell and Windows PowerShell profile to load custom scripts and configs, run the [Powershell\copy_profile.ps1](./Powershell/copy_profile.ps1) script in PowerShell:
+- to setup PowerShell and Windows PowerShell profile to load custom scripts and configs, run the [copy_profile.ps1](./Powershell/copy_profile.ps1) script in PowerShell:
 ```ps1
 . $env:USERPROFILE\dotfiles-Windows\Powershell\copy_profile.ps1
 ```

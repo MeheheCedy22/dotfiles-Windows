@@ -20,31 +20,35 @@ if (-not (Test-Path -Path $CacheDir)) {
 }
 
 # --- Starship Initialization ---
-$ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
-$StarshipCache = Join-Path $CacheDir "starship_init.ps1"
+if (Get-Command 'C:\Program Files\starship\bin\starship.exe' -ErrorAction SilentlyContinue) {
+    $ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
+    $StarshipCache = Join-Path $CacheDir "starship_init.ps1"
 
-if (-not (Test-Path -Path $StarshipCache)) {
-    & 'C:\Program Files\starship\bin\starship.exe' init powershell --print-full-init | Out-File -FilePath $StarshipCache -Encoding utf8
+    if (-not (Test-Path -Path $StarshipCache)) {
+        & 'C:\Program Files\starship\bin\starship.exe' init powershell --print-full-init | Out-File -FilePath $StarshipCache -Encoding utf8
+    }
+    . $StarshipCache
 }
-. $StarshipCache
-
 
 # --- Tailscale Initialization ---
-$TailscaleCache = Join-Path $CacheDir "tailscale_completion.ps1"
+if (Get-Command 'C:\Program Files\Tailscale\tailscale.exe' -ErrorAction SilentlyContinue) {
+    $TailscaleCache = Join-Path $CacheDir "tailscale_completion.ps1"
 
-if (-not (Test-Path -Path $TailscaleCache)) {
-    tailscale completion powershell | Out-File -FilePath $TailscaleCache -Encoding utf8
+    if (-not (Test-Path -Path $TailscaleCache)) {
+        & 'C:\Program Files\Tailscale\tailscale.exe' completion powershell | Out-File -FilePath $TailscaleCache -Encoding utf8
+    }
+    . $TailscaleCache
 }
-. $TailscaleCache
 
 # --------------------------------------------------------------
 # 2. Aliases
 # --------------------------------------------------------------
 # Not needed for less, grep, tail, head, vim, touch, wc, which, uniq because they are in path and do not have Windows counterparts.
-
-Set-Alias -Name "find_linux" -Value "C:\Program Files\Git\usr\bin\find.exe"
-Set-Alias -Name "sort_linux" -Value "C:\Program Files\Git\usr\bin\sort.exe"
-
+$gitPath = "C:\Program Files\Git\usr\bin"
+if (Test-Path -Path $gitPath) {
+    Set-Alias -Name "find_linux" -Value "$gitPath\find.exe"
+    Set-Alias -Name "sort_linux" -Value "$gitPath\sort.exe"
+}
 Set-Alias bb bat
 
 # --------------------------------------------------------------
@@ -67,13 +71,11 @@ function qr {
         [switch]$isURL
     )
     Process {
-        if ([string]::IsNullOrWhiteSpace($inputString))
-        {
+        if ([string]::IsNullOrWhiteSpace($inputString)) {
             return
         }
 
-        if ($isURL)
-        {
+        if ($isURL) {
             if ($inputString -notmatch '^https?://') {
                 $inputString = "https://$inputString"
             }
@@ -85,7 +87,7 @@ function qr {
 
 function lss {
     param (
-        [Parameter(ValueFromPipeline=$true)]
+        [Parameter(ValueFromPipeline = $true)]
         [string[]]$params
     )
 
@@ -93,12 +95,10 @@ function lss {
         # If piped input exists, use it; otherwise, use the passed $params
         $finalParams = if ($params.Count -eq 0) { $_ } else { $params }
 
-        if ($params.Count -gt 0)
-        {
+        if ($params.Count -gt 0) {
             & "$env:LOCALAPPDATA\Microsoft\WinGet\Links\eza.exe" -alh --smart-group --color=auto --group-directories-first --icons=auto --absolute=on $finalParams
         }
-        else
-        {
+        else {
             & "$env:LOCALAPPDATA\Microsoft\WinGet\Links\eza.exe" -alh --smart-group --color=auto --group-directories-first --icons=auto $finalParams
         }
     }
@@ -106,16 +106,14 @@ function lss {
 
 function ff {
     param (
-        [Parameter(ValueFromPipeline=$true)]
+        [Parameter(ValueFromPipeline = $true)]
         [string[]]$params
     )
 
     process {
         # if there is some piped input, than use it as piped input (can't have params / do not need params)
-        if ($_ -ne $NULL)
-        {
-            foreach ($var in $_)
-            {
+        if ($_ -ne $NULL) {
+            foreach ($var in $_) {
                 $inputData += $var.ToString() + "`n"
             }
         }
@@ -125,8 +123,7 @@ function ff {
         # remove last endline
         $inputData = $inputData -replace "(\r?\n)$", ""
 
-        if ($_ -ne $NULL)
-        {
+        if ($_ -ne $NULL) {
             $inputData | & "$env:LOCALAPPDATA\Microsoft\WinGet\Links\fzf.exe" --height 75% --layout reverse --multi --border --preview 'bat --color=always {}'
         } 
         else {

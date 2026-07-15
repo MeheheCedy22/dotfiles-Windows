@@ -30,12 +30,12 @@ foreach ($ProfilePath in $ProfilePaths) {
 }
 
 # create custom profile dir
-if (-not (Test-Path -Path "$env:USERPROFILE\.mypwsh")) {
-    mkdir $env:USERPROFILE\.mypwsh\
-    Write-Host "Created custom profile directory: $env:USERPROFILE\.mypwsh" -ForegroundColor Green
+if (-not (Test-Path -Path $CustomProfileDir)) {
+    mkdir $CustomProfileDir | Out-Null
+    Write-Host "Created custom profile directory: $CustomProfileDir" -ForegroundColor Green
 }
 else {
-    Write-Host "Custom profile directory already exists: $env:USERPROFILE\.mypwsh" -ForegroundColor Yellow
+    Write-Host "Custom profile directory already exists: $CustomProfileDir" -ForegroundColor Yellow
 }
 
 # copy custom profile scripts to the custom profile dir

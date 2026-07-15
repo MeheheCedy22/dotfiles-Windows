@@ -2,50 +2,43 @@
 # 1. Cache Setup & Initialization
 # --------------------------------------------------------------
 
-if ($PSVersionTable.PSEdition -ne 'Core') {
-    # Runs in Windows PowerShell 5.1 and older
-
-    # enable command history
-    Set-PSReadLineOption -PredictionSource History
-    # do not save wrong commands (when hit 'Enter' error pops up but from PSReadLine not the powershell itself)
-    Set-PSReadLineKeyHandler -Chord Enter -Function ValidateAndAcceptLine
-    # change to ListView instead of inline suggestion
-    Set-PSReadLineOption -PredictionViewStyle ListView
-}
-
-$CacheDir = "$HOME\.mypwsh\cache"
+$CacheDir = "$HOME\.config\mypwsh\cache"
 
 if (-not (Test-Path -Path $CacheDir)) {
     New-Item -ItemType Directory -Path $CacheDir | Out-Null
 }
 
 # --- Starship Initialization ---
-$ENV:STARSHIP_CONFIG = "$HOME\.config\starship\starship.toml"
-$StarshipCache = Join-Path $CacheDir "starship_init.ps1"
+if (Get-Command starship -ErrorAction SilentlyContinue) {
+    $ENV:STARSHIP_CONFIG = "$HOME\.config\starship.toml"
+    $StarshipCache = Join-Path $CacheDir "starship_init.ps1"
 
-if (-not (Test-Path -Path $StarshipCache)) {
-    & 'C:\Program Files\starship\bin\starship.exe' init powershell --print-full-init | Out-File -FilePath $StarshipCache -Encoding utf8
+    if (-not (Test-Path -Path $StarshipCache)) {
+        starship init powershell --print-full-init | Out-File -FilePath $StarshipCache -Encoding utf8
+    }
+    . $StarshipCache
 }
-. $StarshipCache
-
 
 # --- Tailscale Initialization ---
-$TailscaleCache = Join-Path $CacheDir "tailscale_completion.ps1"
+if (Get-Command tailscale -ErrorAction SilentlyContinue) {
+    $TailscaleCache = Join-Path $CacheDir "tailscale_completion.ps1"
 
-if (-not (Test-Path -Path $TailscaleCache)) {
-    tailscale completion powershell | Out-File -FilePath $TailscaleCache -Encoding utf8
+    if (-not (Test-Path -Path $TailscaleCache)) {
+        tailscale completion powershell | Out-File -FilePath $TailscaleCache -Encoding utf8
+    }
+    . $TailscaleCache
 }
-. $TailscaleCache
 
 # --------------------------------------------------------------
 # 2. Aliases
 # --------------------------------------------------------------
-# Not needed for less, grep, tail, head, vim, touch, wc, which, uniq because they are in path and do not have Windows counterparts.
-
-Set-Alias -Name "find_linux" -Value "C:\Program Files\Git\usr\bin\find.exe"
-Set-Alias -Name "sort_linux" -Value "C:\Program Files\Git\usr\bin\sort.exe"
-
+# some distros have conflicting package names
+# in such cases, we can create an alias to the correct command
+if (Get-Command batcat -ErrorAction SilentlyContinue) {
+    Set-Alias bat batcat
+}
 Set-Alias bb bat
+Set-Alias ff fzf
 
 # --------------------------------------------------------------
 # 3. Custom Functions
@@ -67,13 +60,11 @@ function qr {
         [switch]$isURL
     )
     Process {
-        if ([string]::IsNullOrWhiteSpace($inputString))
-        {
+        if ([string]::IsNullOrWhiteSpace($inputString)) {
             return
         }
 
-        if ($isURL)
-        {
+        if ($isURL) {
             if ($inputString -notmatch '^https?://') {
                 $inputString = "https://$inputString"
             }
@@ -85,7 +76,7 @@ function qr {
 
 function lss {
     param (
-        [Parameter(ValueFromPipeline=$true)]
+        [Parameter(ValueFromPipeline = $true)]
         [string[]]$params
     )
 
@@ -93,12 +84,10 @@ function lss {
         # If piped input exists, use it; otherwise, use the passed $params
         $finalParams = if ($params.Count -eq 0) { $_ } else { $params }
 
-        if ($params.Count -gt 0)
-        {
+        if ($params.Count -gt 0) {
             & "$env:LOCALAPPDATA\Microsoft\WinGet\Links\eza.exe" -alh --smart-group --color=auto --group-directories-first --icons=auto --absolute=on $finalParams
         }
-        else
-        {
+        else {
             & "$env:LOCALAPPDATA\Microsoft\WinGet\Links\eza.exe" -alh --smart-group --color=auto --group-directories-first --icons=auto $finalParams
         }
     }
@@ -106,16 +95,14 @@ function lss {
 
 function ff {
     param (
-        [Parameter(ValueFromPipeline=$true)]
+        [Parameter(ValueFromPipeline = $true)]
         [string[]]$params
     )
 
     process {
         # if there is some piped input, than use it as piped input (can't have params / do not need params)
-        if ($_ -ne $NULL)
-        {
-            foreach ($var in $_)
-            {
+        if ($_ -ne $NULL) {
+            foreach ($var in $_) {
                 $inputData += $var.ToString() + "`n"
             }
         }
@@ -125,8 +112,7 @@ function ff {
         # remove last endline
         $inputData = $inputData -replace "(\r?\n)$", ""
 
-        if ($_ -ne $NULL)
-        {
+        if ($_ -ne $NULL) {
             $inputData | & "$env:LOCALAPPDATA\Microsoft\WinGet\Links\fzf.exe" --height 75% --layout reverse --multi --border --preview 'bat --color=always {}'
         } 
         else {
@@ -196,8 +182,7 @@ Set-FzfHistoryKeybind -Chord Ctrl+r
 # ----------------------LINUX FILE --------------------------
 # --------------------------------------------------------------
 
-Set-Alias bat batcat
-Set-Alias ff fzf
+
 
 $ENV:STARSHIP_CONFIG = "$HOME/.config/starship.toml"
 Invoke-Expression (&starship init powershell)
@@ -213,12 +198,11 @@ function cheat {
 }
 
 function grep {
-    & /usr/bin/grep --color=auto @Args
+    grep --color=auto @Args
 }
 
 # Nala helpers
-# Nala helpers - Only loaded if 'apt' is the package manager
-if (Get-Command apt -ErrorAction SilentlyContinue) {
+if (Get-Command nala -ErrorAction SilentlyContinue) {
     function nalaup {
         sudo nala update
         if ($LASTEXITCODE -eq 0) {
@@ -242,7 +226,7 @@ function lss {
 
 # ip with color
 function ip {
-    & /usr/sbin/ip --color=auto @Args
+    ip --color=auto @Args
 }
 
 
